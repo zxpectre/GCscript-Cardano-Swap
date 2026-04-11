@@ -20,6 +20,8 @@ This application WILL NOT address:
 * A user interface — interactions are driven directly via GCscript URLs.
 * One-way swap composition.
 * Any operation regarding Two-Way Swaps (Liquidity Swaps).
+* Repricing — updating an existing swap's price via the `UpdateSwaps` redeemer.
+* Partial fill management — the protocol allows partial fills but this app does not guide how much of a swap to take.
 
 ### Future Options
 
