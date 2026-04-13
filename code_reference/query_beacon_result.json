@@ -1,0 +1,184 @@
+{
+    "exports": {
+      "data": {
+        "datumBeacon": {
+          "index": 0,
+          "txHash": "874bbe1a62799789f3df20004ccd6380dd2d00b1c118bd65d82ae67575e165a0",
+          "address": "addr_test1zqjpzgmyr4s9320aq3c3t0uuumfedlwl46pttpdw0uwwz5r94yyu35k68r5jxe7gam5hf3kehj0rptje8v3m4wkxjumsvwnpuj",
+          "datum": {
+            "dataHex": "d8799f00ff",
+            "dataHashHex": "b7afc0e9c25e4fa2933e0ed75b11024f44b271223ddeb5e919c9ed09489e29a1",
+            "dataSize": 5,
+            "data": {
+              "obj": {
+                "constructor": 0,
+                "fields": [
+                  {
+                    "int": 0
+                  }
+                ]
+              },
+              "schema": 1
+            }
+          },
+          "addressInfo": {
+            "isByron": false,
+            "isReward": false,
+            "isEnterprise": false,
+            "isPointer": false,
+            "isPaymentKey": false,
+            "isStakingScript": false,
+            "paymentKeyHash": "",
+            "stakingScriptHash": "",
+            "networkId": 0,
+            "kind": "base",
+            "isCardano": true,
+            "isShelley": true,
+            "isBase": true,
+            "isStakingKey": true,
+            "isPaymentScript": true,
+            "stakingKeyHash": "65a909c8d2da38e92367c8eee974c6d9bc9e30ae593b23babac69737",
+            "paymentScriptHash": "241123641d6058a9fd047115bf9ce6d396fddfae82b585ae7f1ce150",
+            "isScript": true,
+            "rewardAddress": "stake_test1upj6jzwg6tdr36frvlywa6t5cmvme83s4evnkga6htrfwdcqdkf0q",
+            "network": "preprod",
+            "identity": {
+              "scriptHex": "8201818200581c65a909c8d2da38e92367c8eee974c6d9bc9e30ae593b23babac69737",
+              "scriptHash": "23700f3eb05bfab89db4545e5eeaf1c13f0bb4b3a9e68d2310d206e4",
+              "scriptRefHex": "d818582582008201818200581c65a909c8d2da38e92367c8eee974c6d9bc9e30ae593b23babac69737"
+            }
+          },
+          "assets": {
+            "8453db57f15bd9e657253daeac76c020c17533aff1dcba29a78f7348-41444d494e5f544f4b454e": {
+              "policyId": "8453db57f15bd9e657253daeac76c020c17533aff1dcba29a78f7348",
+              "assetNameHex": "41444d494e5f544f4b454e",
+              "quantity": "1"
+            },
+            "ada-ada": {
+              "policyId": "ada",
+              "assetName": "ada",
+              "quantity": "1224040"
+            }
+          }
+        },
+        "assetsBeacon": {
+          "index": 0,
+          "txHash": "234cf325f8ce10d683dc58ce264d55e6ddf8dc70bc24de639b5d33bf797946d3",
+          "address": "addr_test1qzdz94m74nzy708tqu9etg7k5kjq9vpsvhxkm72tcmahtqhnawvrn7emu0nxkvcte8fjz02f3s7krg07fvekn8cymnjs35pq3d",
+          "addressInfo": {
+            "isByron": false,
+            "isReward": false,
+            "isEnterprise": false,
+            "isPointer": false,
+            "isPaymentScript": false,
+            "isStakingScript": false,
+            "paymentScriptHash": "",
+            "stakingScriptHash": "",
+            "isScript": false,
+            "networkId": 0,
+            "kind": "base",
+            "isCardano": true,
+            "isShelley": true,
+            "isBase": true,
+            "isPaymentKey": true,
+            "isStakingKey": true,
+            "paymentKeyHash": "9a22d77eacc44f3ceb070b95a3d6a5a402b03065cd6df94bc6fb7582",
+            "stakingKeyHash": "f3eb9839fb3be3e66b330bc9d3213d498c3d61a1fe4b33699f04dce5",
+            "rewardAddress": "stake_test1ure7hxpelva78entxv9un5ep84ycc0tp58lykvmfnuzdeegf33y7s",
+            "network": "preprod",
+            "identity": {
+              "scriptHex": "8201828200581c9a22d77eacc44f3ceb070b95a3d6a5a402b03065cd6df94bc6fb75828200581cf3eb9839fb3be3e66b330bc9d3213d498c3d61a1fe4b33699f04dce5",
+              "scriptHash": "5db40fb697711a5c309ff719b9beb0770bdb2419a861b7c0fbe887bf",
+              "scriptRefHex": "d818584582008201828200581c9a22d77eacc44f3ceb070b95a3d6a5a402b03065cd6df94bc6fb75828200581cf3eb9839fb3be3e66b330bc9d3213d498c3d61a1fe4b33699f04dce5"
+            }
+          },
+          "assets": {
+            "1d0e38731055ec1f036f5cda2038e6e7d4506eec7729967e03149cf1-46616b65555344": {
+              "policyId": "1d0e38731055ec1f036f5cda2038e6e7d4506eec7729967e03149cf1",
+              "assetNameHex": "46616b65555344",
+              "quantity": "1000"
+            },
+            "1d0e38731055ec1f036f5cda2038e6e7d4506eec7729967e03149cf1-47616d654368616e676572546f6b656ef09f9a80": {
+              "policyId": "1d0e38731055ec1f036f5cda2038e6e7d4506eec7729967e03149cf1",
+              "assetNameHex": "47616d654368616e676572546f6b656ef09f9a80",
+              "quantity": "100"
+            },
+            "bce7649300c6bb12e1bc56a0b49cd13241d4288545614211ed923b7a-47616d654368616e6765724e4654202331": {
+              "policyId": "bce7649300c6bb12e1bc56a0b49cd13241d4288545614211ed923b7a",
+              "assetNameHex": "47616d654368616e6765724e4654202331",
+              "quantity": "1"
+            },
+            "bce7649300c6bb12e1bc56a0b49cd13241d4288545614211ed923b7a-47616d654368616e6765724e4654202332": {
+              "policyId": "bce7649300c6bb12e1bc56a0b49cd13241d4288545614211ed923b7a",
+              "assetNameHex": "47616d654368616e6765724e4654202332",
+              "quantity": "1"
+            },
+            "bce7649300c6bb12e1bc56a0b49cd13241d4288545614211ed923b7a-47616d654368616e6765724e4654202333": {
+              "policyId": "bce7649300c6bb12e1bc56a0b49cd13241d4288545614211ed923b7a",
+              "assetNameHex": "47616d654368616e6765724e4654202333",
+              "quantity": "1"
+            },
+            "bce7649300c6bb12e1bc56a0b49cd13241d4288545614211ed923b7a-6e65726469654064726f70636c7562": {
+              "policyId": "bce7649300c6bb12e1bc56a0b49cd13241d4288545614211ed923b7a",
+              "assetNameHex": "6e65726469654064726f70636c7562",
+              "quantity": "1"
+            },
+            "ada-ada": {
+              "policyId": "ada",
+              "assetName": "ada",
+              "quantity": "1711070"
+            }
+          }
+        },
+        "scriptBeacon": {
+          "txHash": "02050b84a99efb9c7cef89ccc6fd3072cbfadbdec84dbfdcff36671cccc27a6c",
+          "address": "addr_test1zr78zmzps84uj4gphxk7d2np8q9f7mglh6ahewqkkqhzaj47r52x7v5zmzlrge8kcgh40apwn7a99pt3n7ketewyj90s89zdd5",
+          "index": 1,
+          "addressInfo": {
+            "isByron": false,
+            "isReward": false,
+            "isEnterprise": false,
+            "isPointer": false,
+            "isPaymentKey": false,
+            "isStakingScript": false,
+            "paymentKeyHash": "",
+            "stakingScriptHash": "",
+            "networkId": 0,
+            "kind": "base",
+            "isCardano": true,
+            "isShelley": true,
+            "isBase": true,
+            "isStakingKey": true,
+            "isPaymentScript": true,
+            "stakingKeyHash": "be1d146f3282d8be3464f6c22f57f42e9fba5285719fad95e5c4915f",
+            "paymentScriptHash": "fc716c4181ebc95501b9ade6aa61380a9f6d1fbebb7cb816b02e2eca",
+            "isScript": true,
+            "rewardAddress": "stake_test1uzlp69r0x2pd3035vnmvyt6h7shflwjjs4celtv4uhzfzhchw9lkw",
+            "network": "preprod",
+            "identity": {
+              "scriptHex": "8201818200581cbe1d146f3282d8be3464f6c22f57f42e9fba5285719fad95e5c4915f",
+              "scriptHash": "9379a38bb6b59ace8047b2aa9dab3933456cc418f081499c6bc53947",
+              "scriptRefHex": "d818582582008201818200581cbe1d146f3282d8be3464f6c22f57f42e9fba5285719fad95e5c4915f"
+            }
+          },
+          "plutusScript": {
+            "lang": "plutus_v3",
+            "scriptHashHex": "fc716c4181ebc95501b9ade6aa61380a9f6d1fbebb7cb816b02e2eca",
+            "scriptSize": 2671
+          },
+          "assets": {
+            "bd1c0f8e741516dff9501cb4404e6c0db75640d0185e9796963b99b5-424541434f4e4153534554": {
+              "policyId": "bd1c0f8e741516dff9501cb4404e6c0db75640d0185e9796963b99b5",
+              "assetNameHex": "424541434f4e4153534554",
+              "quantity": "1"
+            },
+            "ada-ada": {
+              "policyId": "ada",
+              "assetName": "ada",
+              "quantity": "12736050"
+            }
+          }
+        }
+      }
+    }
+  }
