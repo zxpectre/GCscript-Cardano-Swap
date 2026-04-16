@@ -6,10 +6,10 @@
     "args": {
         "offerPolicyId": "",
         "offerAssetName": "",
-        "askPolicyId": "8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61",
-        "askAssetName": "444a4544",
+        "askPolicyId": "044f78848ab25cbe7a84c0c6768d7fb98d7a99cad21e6f8298354923",
+        "askAssetName": "47616d654368616e676572546f6b656ef09f9a80",
         "priceNumerator": "1",
-        "priceDenominator": "1",
+        "priceDenominator": "1000000",
         "offerQuantity": "3000000"
     },
     "run": {
