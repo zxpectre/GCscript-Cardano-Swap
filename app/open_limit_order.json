@@ -13,7 +13,8 @@
         "askBeacon": "48d9f08789c6b4fc956df426dbd193eefbfa5102e924397c0904de27df427ff2",
         "priceNumerator": "1",
         "priceDenominator": "1",
-        "offerQuantity": "1000000"
+        "offerQuantity": "3000000",
+        "datumHex": "d8798b581cc4d7d117d9ebcde6db28db40837ff2b1401e9eaaa6eecea9e070e2095820450a3157797dfb43a68b94abf851bcb9c447421a726528fc6fcffc8c53aed038404058204bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a581c8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd6144444a4544582048d9f08789c6b4fc956df426dbd193eefbfa5102e924397c0904de27df427ff2d879820101d87a80d87a80"
     },
     "run": {
         "dependencies": {
@@ -47,42 +48,42 @@
                             }
                         }
                     }
-                },
-                "swapDatum": {
-                    "type": "plutusData",
-                    "data": {
-                        "fromJSON": {
-                            "schema": 1,
-                            "obj": {
-                                "constructor": 0,
-                                "fields": [
-                                    {"bytes": "{get('cache.dependencies.beaconPolicy.scriptHashHex')}"},
-                                    {"bytes": "{get('cache.args.pairBeacon')}"},
-                                    {"bytes": "{get('cache.args.offerPolicyId')}"},
-                                    {"bytes": "{get('cache.args.offerAssetName')}"},
-                                    {"bytes": "{get('cache.args.offerBeacon')}"},
-                                    {"bytes": "{get('cache.args.askPolicyId')}"},
-                                    {"bytes": "{get('cache.args.askAssetName')}"},
-                                    {"bytes": "{get('cache.args.askBeacon')}"},
-                                    {"constructor": 0, "fields": [
-                                        {"int": "{get('cache.args.priceNumerator')}"},
-                                        {"int": "{get('cache.args.priceDenominator')}"}
-                                    ]},
-                                    {"constructor": 1, "fields": []},
-                                    {"constructor": 1, "fields": []}
-                                ]
-                            }
-                        }
-                    }
-                },
-                "dappAddress": {
-                    "type": "buildAddress",
-                    "name": "DAppAddress",
-                    "addr": {
-                        "spendScriptHashHex": "{get('cache.dependencies.spendingValidator.scriptHashHex')}",
-                        "stakePubKeyHashHex": "{get('cache.dependencies.stakingKey')}"
+                }
+            }
+        },
+        "swapDatum": {
+            "type": "plutusData",
+            "data": {
+                "fromJSON": {
+                    "schema": 1,
+                    "obj": {
+                        "constructor": 0,
+                        "fields": [
+                            {"bytes": "c4d7d117d9ebcde6db28db40837ff2b1401e9eaaa6eecea9e070e209"},
+                            {"bytes": "{get('args.pairBeacon')}"},
+                            {"bytes": "{get('args.offerPolicyId')}"},
+                            {"bytes": "{get('args.offerAssetName')}"},
+                            {"bytes": "{get('args.offerBeacon')}"},
+                            {"bytes": "{get('args.askPolicyId')}"},
+                            {"bytes": "{get('args.askAssetName')}"},
+                            {"bytes": "{get('args.askBeacon')}"},
+                            {"constructor": 0, "fields": [
+                                {"int": "{get('args.priceNumerator')}"},
+                                {"int": "{get('args.priceDenominator')}"}
+                            ]},
+                            {"constructor": 1, "fields": []},
+                            {"constructor": 1, "fields": []}
+                        ]
                     }
                 }
+            }
+        },
+        "dappAddress": {
+            "type": "buildAddress",
+            "name": "DAppAddress",
+            "addr": {
+                "spendScriptHashHex": "1d6cff26bcab91d2061aad0bd259cbb7d76d25ced2eeaed5926a42ad",
+                "stakePubKeyHashHex": "{get('cache.dependencies.stakingKey.pubKeyHashHex')}"
             }
         },
         "build": {
@@ -91,7 +92,7 @@
             "tx": {
                 "mints": [
                     {
-                        "policyId": "{get('cache.dependencies.beaconPolicy.scriptHashHex')}",
+                        "policyId": "c4d7d117d9ebcde6db28db40837ff2b1401e9eaaa6eecea9e070e209",
                         "idPattern": "beaconMint",
                         "assets": [
                             {"assetNameHex": "{get('args.pairBeacon')}", "quantity": "1"},
@@ -102,13 +103,13 @@
                 ],
                 "outputs": [
                     {
-                        "address": "{get('cache.dependencies.dappAddress')}",
-                        "datum": {"datumHex": "{get('cache.dependencies.swapDatum.dataHex')}"},
+                        "address": "{get('cache.dappAddress')}",
+                        "datum": {"datumHex": "{get('cache.swapDatum.dataHex')}"},
                         "assets": [
                             {"policyId": "ada", "assetName": "ada", "quantity": "2000000"},
-                            {"policyId": "{get('cache.dependencies.beaconPolicy.scriptHashHex')}", "assetNameHex": "{get('args.pairBeacon')}", "quantity": "1"},
-                            {"policyId": "{get('cache.dependencies.beaconPolicy.scriptHashHex')}", "assetNameHex": "{get('args.offerBeacon')}", "quantity": "1"},
-                            {"policyId": "{get('cache.dependencies.beaconPolicy.scriptHashHex')}", "assetNameHex": "{get('args.askBeacon')}", "quantity": "1"},
+                            {"policyId": "c4d7d117d9ebcde6db28db40837ff2b1401e9eaaa6eecea9e070e209", "assetNameHex": "{get('args.pairBeacon')}", "quantity": "1"},
+                            {"policyId": "c4d7d117d9ebcde6db28db40837ff2b1401e9eaaa6eecea9e070e209", "assetNameHex": "{get('args.offerBeacon')}", "quantity": "1"},
+                            {"policyId": "c4d7d117d9ebcde6db28db40837ff2b1401e9eaaa6eecea9e070e209", "assetNameHex": "{get('args.askBeacon')}", "quantity": "1"},
                             {"policyId": "ada", "assetName": "ada", "quantity": "{get('args.offerQuantity')}"}
                         ]
                     }
