@@ -4,13 +4,13 @@
     "description": "Creates a one-way swap UTxO on the Cardano-Swaps protocol via GCscript.",
     "exportAs": "openLimitOrder",
     "args": {
-        "offerPolicyId": "",
-        "offerAssetName": "",
-        "askPolicyId": "044f78848ab25cbe7a84c0c6768d7fb98d7a99cad21e6f8298354923",
-        "askAssetName": "47616d654368616e676572546f6b656ef09f9a80",
-        "priceNumerator": "1",
-        "priceDenominator": "1000000",
-        "offerQuantity": "3000000"
+        "offerPolicyId": "044f78848ab25cbe7a84c0c6768d7fb98d7a99cad21e6f8298354923",
+        "offerAssetName": "47616d654368616e676572546f6b656ef09f9a80",
+        "askPolicyId": "",
+        "askAssetName": "",
+        "priceNumerator": "1000000",
+        "priceDenominator": "1",
+        "offerQuantity": "3"
     },
     "run": {
         "dependencies": {
@@ -41,11 +41,11 @@
                 },
                 "pairBeacon": {
                     "type": "macro",
-                    "run": "{sha256(flatten(hexToByteArray('00'), hexToByteArray(get('args.offerPolicyId')), hexToByteArray(get('args.offerAssetName')), hexToByteArray(get('args.askPolicyId')), hexToByteArray(get('args.askAssetName'))))}"
+                    "run": "{sha256(flatten(hexToByteArray(get('args.offerPolicyId')), hexToByteArray(get('args.offerAssetName')), hexToByteArray('00'), hexToByteArray(get('args.askAssetName'))))}"
                 },
                 "offerBeacon": {
                     "type": "macro",
-                    "run": "{sha256(hexToByteArray('01'))}"
+                    "run": "{sha256(flatten(hexToByteArray('01'), hexToByteArray(get('args.offerPolicyId')), hexToByteArray(get('args.offerAssetName'))))}"
                 },
                 "askBeacon": {
                     "type": "macro",
@@ -108,7 +108,7 @@
                         "address": "{get('cache.dependencies.dappAddress')}",
                         "datum": {"datumHex": "{get('cache.dependencies.swapDatum.dataHex')}"},
                         "assets": [
-                            {"policyId": "ada", "assetName": "ada", "quantity": "{get('args.offerQuantity')}"},
+                            {"policyId": "{get('args.offerPolicyId')}", "assetNameHex": "{get('args.offerAssetName')}", "quantity": "{get('args.offerQuantity')}"},
                             {"policyId": "c4d7d117d9ebcde6db28db40837ff2b1401e9eaaa6eecea9e070e209", "assetNameHex": "{get('cache.dependencies.pairBeacon')}", "quantity": "1"},
                             {"policyId": "c4d7d117d9ebcde6db28db40837ff2b1401e9eaaa6eecea9e070e209", "assetNameHex": "{get('cache.dependencies.offerBeacon')}", "quantity": "1"},
                             {"policyId": "c4d7d117d9ebcde6db28db40837ff2b1401e9eaaa6eecea9e070e209", "assetNameHex": "{get('cache.dependencies.askBeacon')}", "quantity": "1"}
