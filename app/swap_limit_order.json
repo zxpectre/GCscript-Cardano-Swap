@@ -4,17 +4,17 @@
     "description": "Fills an existing one-way swap UTxO on the Cardano-Swaps protocol via GCscript. Deposits the ask asset and receives the offer asset. Partial fill: remaining offer stays at DApp address with updated datum.",
     "exportAs": "swapLimitOrder",
     "args": {
-        "swapTxHash": "",
-        "swapTxIndex": "",
-        "ownerStakeKeyHash": "",
-        "offerPolicyId": "",
-        "offerAssetName": "",
-        "askPolicyId": "",
-        "askAssetName": "",
-        "priceNumerator": "",
-        "priceDenominator": "",
-        "outputAdaQuantity": "",
-        "remainingOfferQuantity": ""
+        "swap-tx-hash": "",
+        "swap-tx-index": "",
+        "owner-stake-keyhash": "",
+        "offer-policy-id": "",
+        "offer-asset-name": "",
+        "ask-policy-id": "",
+        "ask-asset-name": "",
+        "price-numerator": "",
+        "price-denominator": "",
+        "output-ada-quantity": "",
+        "remaining-offer-quantity": ""
     },
     "run": {
         "dependencies": {
@@ -30,15 +30,15 @@
                 },
                 "pairBeacon": {
                     "type": "macro",
-                    "run": "{sha256(flatten(hexToByteArray(get('args.offerPolicyId')), hexToByteArray(get('args.offerAssetName')), hexToByteArray('00'), hexToByteArray(get('args.askAssetName'))))}"
+                    "run": "{sha256(flatten(hexToByteArray(get('args.offer-policy-id')), hexToByteArray(get('args.offer-asset-name')), hexToByteArray('00'), hexToByteArray(get('args.ask-asset-name'))))}"
                 },
                 "offerBeacon": {
                     "type": "macro",
-                    "run": "{sha256(flatten(hexToByteArray('01'), hexToByteArray(get('args.offerPolicyId')), hexToByteArray(get('args.offerAssetName'))))}"
+                    "run": "{sha256(flatten(hexToByteArray('01'), hexToByteArray(get('args.offer-policy-id')), hexToByteArray(get('args.offer-asset-name'))))}"
                 },
                 "askBeacon": {
                     "type": "macro",
-                    "run": "{sha256(flatten(hexToByteArray('02'), hexToByteArray(get('args.askPolicyId')), hexToByteArray(get('args.askAssetName'))))}"
+                    "run": "{sha256(flatten(hexToByteArray('02'), hexToByteArray(get('args.ask-policy-id')), hexToByteArray(get('args.ask-asset-name'))))}"
                 },
                 "swapRedeemer": {
                     "type": "plutusData",
@@ -62,22 +62,22 @@
                                 "fields": [
                                     {"bytes": "c4d7d117d9ebcde6db28db40837ff2b1401e9eaaa6eecea9e070e209"},
                                     {"bytes": "{get('cache.dependencies.pairBeacon')}"},
-                                    {"bytes": "{get('args.offerPolicyId')}"},
-                                    {"bytes": "{get('args.offerAssetName')}"},
+                                    {"bytes": "{get('args.offer-policy-id')}"},
+                                    {"bytes": "{get('args.offer-asset-name')}"},
                                     {"bytes": "{get('cache.dependencies.offerBeacon')}"},
-                                    {"bytes": "{get('args.askPolicyId')}"},
-                                    {"bytes": "{get('args.askAssetName')}"},
+                                    {"bytes": "{get('args.ask-policy-id')}"},
+                                    {"bytes": "{get('args.ask-asset-name')}"},
                                     {"bytes": "{get('cache.dependencies.askBeacon')}"},
                                     {"constructor": 0, "fields": [
-                                        {"int": "{jsonToObj(get('args.priceNumerator'))}"},
-                                        {"int": "{jsonToObj(get('args.priceDenominator'))}"}
+                                        {"int": "{jsonToObj(get('args.price-numerator'))}"},
+                                        {"int": "{jsonToObj(get('args.price-denominator'))}"}
                                     ]},
                                     {"constructor": 0, "fields": [
                                         {"constructor": 0, "fields": [
                                             {"constructor": 0, "fields": [
-                                                {"bytes": "{get('args.swapTxHash')}"}
+                                                {"bytes": "{get('args.swap-tx-hash')}"}
                                             ]},
-                                            {"int": "{jsonToObj(get('args.swapTxIndex'))}"}
+                                            {"int": "{jsonToObj(get('args.swap-tx-index'))}"}
                                         ]}
                                     ]},
                                     {"constructor": 1, "fields": []}
@@ -91,7 +91,7 @@
                     "name": "DAppAddress",
                     "addr": {
                         "spendScriptHashHex": "1d6cff26bcab91d2061aad0bd259cbb7d76d25ced2eeaed5926a42ad",
-                        "stakePubKeyHashHex": "{get('args.ownerStakeKeyHash')}"
+                        "stakePubKeyHashHex": "{get('args.owner-stake-keyhash')}"
                     }
                 }
             }
@@ -102,8 +102,8 @@
             "tx": {
                 "inputs": [
                     {
-                        "txHash": "{get('args.swapTxHash')}",
-                        "index": "{jsonToObj(get('args.swapTxIndex'))}",
+                        "txHash": "{get('args.swap-tx-hash')}",
+                        "index": "{jsonToObj(get('args.swap-tx-index'))}",
                         "idPattern": "swap-input"
                     }
                 ],
@@ -115,14 +115,14 @@
                         },
                         "assets": [
                             {
-                                "policyId": "{get('args.offerPolicyId')}",
-                                "assetNameHex": "{get('args.offerAssetName')}",
-                                "quantity": "{get('args.remainingOfferQuantity')}"
+                                "policyId": "{get('args.offer-policy-id')}",
+                                "assetNameHex": "{get('args.offer-asset-name')}",
+                                "quantity": "{get('args.remaining-offer-quantity')}"
                             },
                             {
                                 "policyId": "ada",
                                 "assetName": "ada",
-                                "quantity": "{get('args.outputAdaQuantity')}"
+                                "quantity": "{get('args.output-ada-quantity')}"
                             },
                             {
                                 "policyId": "c4d7d117d9ebcde6db28db40837ff2b1401e9eaaa6eecea9e070e209",

@@ -4,13 +4,13 @@
     "description": "Closes a one-way swap UTxO on the Cardano-Swaps protocol. Burns all 3 beacons and returns remaining offer and accumulated ask assets to the owner. Staking credential must sign.",
     "exportAs": "closeLimitOrder",
     "args": {
-        "swapTxHash": "",
-        "swapTxIndex": "",
-        "ownerStakeKeyHash": "",
-        "offerPolicyId": "",
-        "offerAssetName": "",
-        "askPolicyId": "",
-        "askAssetName": ""
+        "swap-tx-hash": "",
+        "swap-tx-index": "",
+        "owner-stake-key-hash": "",
+        "offer-policy-id": "",
+        "offer-asset-name": "",
+        "ask-policy-id": "",
+        "ask-asset-name": ""
     },
     "run": {
         "dependencies": {
@@ -33,15 +33,15 @@
                 },
                 "pairBeacon": {
                     "type": "macro",
-                    "run": "{sha256(flatten(hexToByteArray(get('args.offerPolicyId')), hexToByteArray(get('args.offerAssetName')), hexToByteArray('00'), hexToByteArray(get('args.askAssetName'))))}"
+                    "run": "{sha256(flatten(hexToByteArray(get('args.offer-policy-id')), hexToByteArray(get('args.offer-asset-name')), hexToByteArray('00'), hexToByteArray(get('args.ask-asset-name'))))}"
                 },
                 "offerBeacon": {
                     "type": "macro",
-                    "run": "{sha256(flatten(hexToByteArray('01'), hexToByteArray(get('args.offerPolicyId')), hexToByteArray(get('args.offerAssetName'))))}"
+                    "run": "{sha256(flatten(hexToByteArray('01'), hexToByteArray(get('args.offer-policy-id')), hexToByteArray(get('args.offer-asset-name'))))}"
                 },
                 "askBeacon": {
                     "type": "macro",
-                    "run": "{sha256(flatten(hexToByteArray('02'), hexToByteArray(get('args.askPolicyId')), hexToByteArray(get('args.askAssetName'))))}"
+                    "run": "{sha256(flatten(hexToByteArray('02'), hexToByteArray(get('args.ask-policy-id')), hexToByteArray(get('args.ask-asset-name'))))}"
                 },
                 "spendRedeemer": {
                     "type": "plutusData",
@@ -75,8 +75,8 @@
             "tx": {
                 "inputs": [
                     {
-                        "txHash": "{get('args.swapTxHash')}",
-                        "index": "{jsonToObj(get('args.swapTxIndex'))}",
+                        "txHash": "{get('args.swap-tx-hash')}",
+                        "index": "{jsonToObj(get('args.swap-tx-index'))}",
                         "idPattern": "swap-input"
                     }
                 ],
@@ -124,7 +124,7 @@
                     }
                 },
                 "requiredSigners": [
-                    "{get('args.ownerStakeKeyHash')}"
+                    "{get('args.owner-stake-key-hash')}"
                 ],
                 "options": {
                     "collateralCoinSelection": "LASLAD"
