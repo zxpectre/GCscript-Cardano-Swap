@@ -4,17 +4,17 @@
     "description": "Fills an existing one-way swap UTxO on the Cardano-Swaps protocol via GCscript. Deposits the ask asset and receives the offer asset. Partial fill: remaining offer stays at DApp address with updated datum.",
     "exportAs": "swapLimitOrder",
     "args": {
-        "swapTxHash": "",
-        "swapTxIndex": "",
-        "ownerStakeKeyHash": "",
-        "offerPolicyId": "",
-        "offerAssetName": "",
+        "swapTxHash": "aac8b6c4d137b627ff1526d90c196be1b6d401db74bd26569d12d9a57e223b81",
+        "swapTxIndex": "0",
+        "ownerStakeKeyHash": "07b5beef3484d096b1ab4302730eb04b66b94911f9c3503f2aeda498",
+        "offerPolicyId": "044f78848ab25cbe7a84c0c6768d7fb98d7a99cad21e6f8298354923",
+        "offerAssetName": "47616d654368616e676572546f6b656ef09f9a80",
         "askPolicyId": "",
         "askAssetName": "",
-        "priceNumerator": "",
-        "priceDenominator": "",
-        "outputAdaQuantity": "",
-        "remainingOfferQuantity": ""
+        "priceNumerator": "1000000",
+        "priceDenominator": "1",
+        "outputAdaQuantity": "3715300",
+        "remainingOfferQuantity": "2"
     },
     "run": {
         "dependencies": {

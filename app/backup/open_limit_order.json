@@ -4,13 +4,13 @@
     "description": "Creates a one-way swap UTxO on the Cardano-Swaps protocol via GCscript.",
     "exportAs": "openLimitOrder",
     "args": {
-        "offerPolicyId": "",
-        "offerAssetName": "",
+        "offerPolicyId": "044f78848ab25cbe7a84c0c6768d7fb98d7a99cad21e6f8298354923",
+        "offerAssetName": "47616d654368616e676572546f6b656ef09f9a80",
         "askPolicyId": "",
         "askAssetName": "",
-        "priceNumerator": "",
-        "priceDenominator": "",
-        "offerQuantity": ""
+        "priceNumerator": "1000000",
+        "priceDenominator": "1",
+        "offerQuantity": "3"
     },
     "run": {
         "dependencies": {

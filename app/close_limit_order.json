@@ -4,11 +4,11 @@
     "description": "Closes a one-way swap UTxO on the Cardano-Swaps protocol. Burns all 3 beacons and returns remaining offer and accumulated ask assets to the owner. Staking credential must sign.",
     "exportAs": "closeLimitOrder",
     "args": {
-        "swapTxHash": "13bcccfd1b6877cbc6097d180a9c171b483dfd9d16eea5beb91e4cd996490061",
-        "swapTxIndex": "0",
-        "ownerStakeKeyHash": "07b5beef3484d096b1ab4302730eb04b66b94911f9c3503f2aeda498",
-        "offerPolicyId": "044f78848ab25cbe7a84c0c6768d7fb98d7a99cad21e6f8298354923",
-        "offerAssetName": "47616d654368616e676572546f6b656ef09f9a80",
+        "swapTxHash": "",
+        "swapTxIndex": "",
+        "ownerStakeKeyHash": "",
+        "offerPolicyId": "",
+        "offerAssetName": "",
         "askPolicyId": "",
         "askAssetName": ""
     },
