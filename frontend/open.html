@@ -30,6 +30,7 @@
 .actions{flex-wrap:wrap;align-items:stretch}#connect-link{display:flex;flex:0 0 100%;width:100%;max-width:100%;order:99}#connect-wallet-btn{width:auto}
 .console{min-height:120px;max-height:420px;overflow:auto;padding:14px;border-radius:14px;border:1px solid var(--line);background:#060c1fcb;color:#cbf7ff}.empty{color:var(--muted)}.status{font-size:12px;min-height:18px}.status--info{color:var(--info)}.status--ok,.status--success{color:var(--success)}.status--warn{color:var(--warn)}.status--err,.status--danger{color:var(--danger)}.status--mute{color:var(--mute)}.hidden{display:none!important}.stat{padding:12px;border-radius:14px;border:1px solid var(--line);background:#ffffff04}.stat strong{display:block;margin-top:4px;font-size:15px;color:var(--cyan)}
 .app-footer{padding:16px 0 0;text-align:center}.app-footer__links{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:0}.app-footer__links{font-size:12px}.app-footer__library{margin-top:10px;font-size:13px;font-weight:600}.app-footer a{color:var(--blue)}.app-footer a:hover{text-decoration:underline}.app-footer__text{color:var(--muted)}
+.orders-table-wrap{overflow-x:auto}.orders-table{width:100%;border-collapse:collapse;font-size:13px}.orders-table th{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);color:var(--cyan);font-size:11px;text-transform:uppercase;letter-spacing:.08em}.orders-table td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}.orders-table tr:last-child td{border-bottom:none}.orders-table tbody tr:hover td{background:#ffffff06}.orders-actions{display:flex;gap:6px;white-space:nowrap}[data-theme="light"] .orders-table tbody tr:hover td{background:#00000006}
 @media (max-width:940px){.layout,.layout--single,.mini-grid{grid-template-columns:1fr}.hero__top{flex-direction:column}.hero__tools{width:100%;justify-content:flex-end}.connected-wallet{width:100%}.connected-wallet__name,.connected-wallet__sub,.connected-wallet__address{max-width:none}.btn--primary,#connect-link{width:100%;max-width:100%}}
 </style>
 </head>
@@ -94,6 +95,15 @@
 <div id="options-form" class="form-grid"></div>
 <div class="actions"><button id="reset-storage-btn" class="btn btn--ghost" type="button">Reset storage</button></div>
 </div>
+</section>
+
+<section id="orders-panel" class="card stack">
+<div class="row">
+<h2 class="section-title">Open Orders</h2>
+<button id="query-orders-btn" class="btn btn--ghost" type="button">Refresh</button>
+</div>
+<div id="orders-status" class="status"></div>
+<div id="orders-table-wrap" class="orders-table-wrap"></div>
 </section>
 
 <aside id="debug-panel" class="card stack hidden">
@@ -183,9 +193,14 @@
           useOptions: true,
           theme: 'dark',
           popupFeatures: 'noopener,width=480,height=720',
-          manualResponse: ''
+          manualResponse: '',
+          blockfrostApiKey: 'preprodLEZfe4yrdS3WPIeK0whrARkHPv2wzIW7'
         },
-        custom: {}
+        custom: {
+          orders: [],
+          queryStatus: 'idle',
+          queryMessage: ''
+        }
       },
 
       /**
@@ -217,6 +232,7 @@
             popupFeatures: { kind: 'text' },
             walletBaseUrl: { kind: 'text' },
             refAddress: { kind: 'text' },
+            blockfrostApiKey: { kind: 'text', label: 'Blockfrost API Key' },
             manualResponse: { kind: 'textarea', full: true, label: 'Manual wallet response' },
             manualResponseSubmit: {
               kind: 'button',
@@ -1054,24 +1070,56 @@
        *   `connect` intent is available
        */
       render(app) {
+        // Connect widget
         const widget = $('connect-widget');
         const connectButton = $('connect-wallet-btn');
         const connectedBox = $('connected-wallet');
-        if (!widget || !connectButton || !connectedBox) return;
+        if (widget && connectButton && connectedBox) {
+          const wallet = app.custom.connectedWallet;
+          const hasConnectIntent = !!app.defaultIntents.connect;
+          const enabled = !!app.options.useConnect && (!!wallet || hasConnectIntent);
+          widget.classList.toggle('hidden', !enabled);
+          connectButton.classList.toggle('hidden', !enabled || !!wallet || !hasConnectIntent);
+          connectedBox.classList.toggle('hidden', !enabled || !wallet);
+          if (wallet) {
+            $('connected-wallet-name').textContent = wallet.name || 'Connected wallet';
+            $('connected-wallet-sub').textContent = [wallet.type, wallet.brand].filter(Boolean).join(' · ');
+            $('connected-wallet-address').textContent = truncate({ value: wallet.address, start: 12, end: 10 });
+          }
+        }
 
-        const wallet = app.custom.connectedWallet;
-        const hasConnectIntent = !!app.defaultIntents.connect;
-        const enabled = !!app.options.useConnect && (!!wallet || hasConnectIntent);
-
-        widget.classList.toggle('hidden', !enabled);
-        connectButton.classList.toggle('hidden', !enabled || !!wallet || !hasConnectIntent);
-        connectedBox.classList.toggle('hidden', !enabled || !wallet);
-
-        if (!wallet) return;
-
-        $('connected-wallet-name').textContent = wallet.name || 'Connected wallet';
-        $('connected-wallet-sub').textContent = [wallet.type, wallet.brand].filter(Boolean).join(' · ');
-        $('connected-wallet-address').textContent = truncate({ value: wallet.address, start: 12, end: 10 });
+        // Orders panel
+        const statusEl = $('orders-status');
+        const tableWrap = $('orders-table-wrap');
+        const queryBtn = $('query-orders-btn');
+        if (!statusEl || !tableWrap) return;
+        const { queryStatus, queryMessage, orders } = app.custom;
+        statusEl.textContent = queryMessage || '';
+        statusEl.className = 'status' + (
+          queryStatus === 'loading' ? ' status--info' :
+          queryStatus === 'error'   ? ' status--err'  :
+          queryStatus === 'ok'      ? ' status--ok'   : '');
+        if (queryBtn) queryBtn.disabled = (queryStatus === 'loading');
+        if (!orders || !orders.length) {
+          tableWrap.innerHTML = queryStatus !== 'loading'
+            ? '<p class="muted">Click Refresh to query open orders.</p>' : '';
+          return;
+        }
+        const rows = orders.map((o, i) => {
+          const offerLabel = o.offerId ? hexToAsciiOrHex(o.offerName) : 'ADA';
+          const askLabel   = o.askId   ? hexToAsciiOrHex(o.askName)   : 'ADA';
+          return `<tr>
+            <td title="${o.offerId || 'lovelace'}.${o.offerName}">${offerLabel}</td>
+            <td title="${o.askId || 'lovelace'}.${o.askName}">${askLabel}</td>
+            <td>${o.priceNum}/${o.priceDen}</td>
+            <td class="muted" title="${o.txHash}#${o.txIndex}">${o.txHash.slice(0,10)}&hellip;#${o.txIndex}</td>
+            <td class="orders-actions">
+              <button class="btn btn--ghost" data-action="fill" data-idx="${i}" type="button">Fill</button>
+              <button class="btn btn--ghost" data-action="close" data-idx="${i}" type="button">Close</button>
+            </td>
+          </tr>`;
+        }).join('');
+        tableWrap.innerHTML = `<table class="orders-table"><thead><tr><th>Offer</th><th>Ask</th><th>Price</th><th>UTxO</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
       },
 
       /**
@@ -1094,6 +1142,68 @@
             app.dirty = true;
           };
         }
+
+        // Query open orders
+        const queryBtn = $('query-orders-btn');
+        if (queryBtn) {
+          queryBtn.onclick = async () => {
+            if (!app.options.blockfrostApiKey) {
+              app.custom.queryStatus = 'error';
+              app.custom.queryMessage = 'Set Blockfrost API key in Options first.';
+              app.dirty = true;
+              return;
+            }
+            app.custom.queryStatus = 'loading';
+            app.custom.queryMessage = 'Querying open orders\u2026';
+            app.dirty = true;
+            try {
+              const orders = await queryOpenOrders(app.options.blockfrostApiKey);
+              app.custom.orders = orders;
+              app.custom.queryStatus = 'ok';
+              app.custom.queryMessage = orders.length
+                ? `${orders.length} open order${orders.length !== 1 ? 's' : ''} found.`
+                : 'No open orders found.';
+            } catch (e) {
+              app.custom.queryStatus = 'error';
+              app.custom.queryMessage = e.message || 'Query failed.';
+            }
+            app.dirty = true;
+          };
+        }
+
+        // Fill / Close row actions (event delegation)
+        const tableWrap = $('orders-table-wrap');
+        if (tableWrap) {
+          tableWrap.onclick = (event) => {
+            const btn = event.target.closest('[data-action]');
+            if (!btn) return;
+            const action = btn.dataset.action;
+            const order = (app.custom.orders || [])[parseInt(btn.dataset.idx, 10)];
+            if (!order) return;
+            if (action === 'fill') {
+              app.ui.currentIntentKey = 'swapLimitOrder';
+              const a = app.intents.swapLimitOrder.code.args;
+              a['swap-tx-hash']      = order.txHash;
+              a['swap-tx-index']     = String(order.txIndex);
+              a['offer-policy-id']   = order.offerId;
+              a['offer-asset-name']  = order.offerName;
+              a['ask-policy-id']     = order.askId;
+              a['ask-asset-name']    = order.askName;
+              a['price-numerator']   = String(order.priceNum);
+              a['price-denominator'] = String(order.priceDen);
+            } else if (action === 'close') {
+              app.ui.currentIntentKey = 'closeLimitOrder';
+              const a = app.intents.closeLimitOrder.code.args;
+              a['swap-tx-hash']        = order.txHash;
+              a['swap-tx-index']       = String(order.txIndex);
+              a['offer-policy-id']     = order.offerId;
+              a['offer-asset-name']    = order.offerName;
+              a['ask-policy-id']       = order.askId;
+              a['ask-asset-name']      = order.askName;
+            }
+            app.dirty = true;
+          };
+        }
       }
     }
   });
@@ -1102,6 +1212,125 @@
    * Exposes the global reactive app proxy for direct customization.
    */
   window.app = app;
+
+  /** Decode a hex asset name: returns UTF-8 string if printable ASCII, else truncated hex. */
+  function hexToAsciiOrHex(hex) {
+    if (!hex) return 'ADA';
+    try {
+      const bytes = new Uint8Array(hex.match(/.{2}/g).map(h => parseInt(h, 16)));
+      const str = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+      if (str.length > 0 && /^[\x20-\x7e]+$/.test(str)) return str;
+    } catch (_) {}
+    return hex.length > 16 ? hex.slice(0, 16) + '\u2026' : hex;
+  }
+
+  /** Minimal recursive CBOR decoder for Plutus data. */
+  function decodeCborPlutus(hex) {
+    const bytes = new Uint8Array(hex.match(/.{2}/g).map(h => parseInt(h, 16)));
+    let pos = 0;
+    function rb() { return bytes[pos++]; }
+    function rhex(n) { let s = ''; for (let i = 0; i < n; i++) s += bytes[pos++].toString(16).padStart(2, '0'); return s; }
+    function ruint(ai) {
+      if (ai <= 23) return ai;
+      if (ai === 24) return rb();
+      if (ai === 25) return (rb() << 8) | rb();
+      if (ai === 26) return (rb() * 0x1000000) + (rb() << 16) + (rb() << 8) + rb();
+      if (ai === 27) { let v = 0; for (let i = 0; i < 8; i++) v = v * 256 + rb(); return v; }
+      return 0;
+    }
+    function decode() {
+      const b = rb(), mt = b >> 5, ai = b & 0x1f;
+      if (mt === 0) return ruint(ai);
+      if (mt === 1) return -(ruint(ai) + 1);
+      if (mt === 2) {
+        if (ai === 31) { let s = ''; while (bytes[pos] !== 0xff) { const b2 = rb(); s += rhex(ruint(b2 & 0x1f)); } rb(); return { bytes: s }; }
+        return { bytes: rhex(ruint(ai)) };
+      }
+      if (mt === 4) {
+        const items = [];
+        if (ai === 31) { while (bytes[pos] !== 0xff) items.push(decode()); rb(); }
+        else { const n = ruint(ai); for (let i = 0; i < n; i++) items.push(decode()); }
+        return { arr: items };
+      }
+      if (mt === 6) {
+        const tag = ruint(ai); const val = decode();
+        if (tag === 2 && val && val.bytes !== undefined) return parseInt(val.bytes || '0', 16);
+        if (tag === 3 && val && val.bytes !== undefined) return -(parseInt(val.bytes || '0', 16) + 1);
+        return { tag, val };
+      }
+      return null;
+    }
+    return decode();
+  }
+
+  /** Extract SwapDatum fields from an inline datum CBOR hex string. */
+  function parseSwapDatum(cbor) {
+    try {
+      const root = decodeCborPlutus(cbor);
+      // Expect { tag: 121, val: { arr: [11 items] } }
+      if (!root || root.tag !== 121) return null;
+      const f = root.val && root.val.arr;
+      if (!f || f.length < 11) return null;
+      const priceArr = f[8] && f[8].val && f[8].val.arr;
+      return {
+        beaconId:    f[0] && f[0].bytes || '',
+        pairBeacon:  f[1] && f[1].bytes || '',
+        offerId:     f[2] && f[2].bytes || '',
+        offerName:   f[3] && f[3].bytes || '',
+        offerBeacon: f[4] && f[4].bytes || '',
+        askId:       f[5] && f[5].bytes || '',
+        askName:     f[6] && f[6].bytes || '',
+        askBeacon:   f[7] && f[7].bytes || '',
+        priceNum:    priceArr && priceArr[0] !== undefined ? priceArr[0] : 0,
+        priceDen:    priceArr && priceArr[1] !== undefined ? priceArr[1] : 0,
+      };
+    } catch (_) { return null; }
+  }
+
+  /**
+   * Query open limit orders from Blockfrost (Preprod).
+   * Strategy: list all beacon assets → collect unique DApp addresses → fetch UTxOs → parse datums.
+   */
+  async function queryOpenOrders(apiKey) {
+    const base = 'https://cardano-preprod.blockfrost.io/api/v0';
+    const hdr = { 'project_id': apiKey };
+    const BEACON_POLICY = 'c4d7d117d9ebcde6db28db40837ff2b1401e9eaaa6eecea9e070e209';
+
+    // 1. All live beacon assets under the policy (first page, up to 100)
+    const r1 = await fetch(`${base}/assets/policy/${BEACON_POLICY}?count=100&page=1`, { headers: hdr });
+    if (!r1.ok) throw new Error(`Blockfrost error ${r1.status}: ${r1.statusText}`);
+    const allAssets = await r1.json();
+    const liveAssets = allAssets.filter(a => a.quantity !== '0');
+
+    // 2. Collect unique DApp addresses holding any beacon
+    const addrSet = new Set();
+    for (const asset of liveAssets) {
+      const r = await fetch(`${base}/assets/${asset.asset}/addresses`, { headers: hdr });
+      if (!r.ok) continue;
+      const addrs = await r.json();
+      for (const a of addrs) if (a.quantity !== '0') addrSet.add(a.address);
+    }
+
+    // 3. Fetch UTxOs per unique address; keep those with a beacon and a parseable inline datum
+    const seen = new Set();
+    const orders = [];
+    for (const address of addrSet) {
+      const r = await fetch(`${base}/addresses/${address}/utxos?count=100&page=1`, { headers: hdr });
+      if (!r.ok) continue;
+      const utxos = await r.json();
+      for (const utxo of utxos) {
+        const key = `${utxo.tx_hash}:${utxo.tx_index}`;
+        if (seen.has(key)) continue;
+        const hasBeacon = utxo.amount && utxo.amount.some(a => a.unit.startsWith(BEACON_POLICY));
+        if (!hasBeacon || !utxo.inline_datum) continue;
+        seen.add(key);
+        const datum = parseSwapDatum(utxo.inline_datum);
+        if (!datum) continue;
+        orders.push({ ...datum, txHash: utxo.tx_hash, txIndex: utxo.tx_index, address });
+      }
+    }
+    return orders;
+  }
 
   /********************************************************************
    * ADVANCED AUTOGENERATED RUNTIME
